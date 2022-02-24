@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs').promises;
 const authValidation = require('./middlewares/auth');
 const nameValidation = require('./middlewares/nameValidation');
 const ageValidation = require('./middlewares/ageValidation');
@@ -21,7 +20,6 @@ app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
-const FILENAME = 'talker.json';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
