@@ -1,5 +1,4 @@
 const express = require('express');
-const crypto = require('crypto');
 const fs = require('fs').promises;
 const authValidation = require('./middlewares/auth');
 const nameValidation = require('./middlewares/nameValidation');
@@ -12,6 +11,7 @@ const passwordValidation = require('./middlewares/passwordValidation');
 const getAllTalkers = require('./controllers/getAllTalkers');
 const getTalkerById = require('./controllers/getTalkerById');
 const login = require('./controllers/login');
+const createTalker = require('./controllers/createTalker');
 
 const app = express();
 app.use(express.json());
@@ -42,17 +42,7 @@ app.post('/talker',
   talkKeyValidation,
   rateValidation,
   dateValidation,
-  async (req, res) => {
-  const { name, age, talk } = req.body;
-
-  const data = await fs.readFile(FILENAME, 'utf-8');
-  const talkers = JSON.parse(data);
-  const newTalker = { id: (talkers.length + 1), name, age, talk };
-
-  talkers.push(newTalker);
-  await fs.writeFile(FILENAME, JSON.stringify(talkers));
-  return res.status(201).json({ id: (talkers.length + 1), ...newTalker });
-});
+  createTalker);
 
 // Requisito 07
 app.get('/talker/search', authValidation, async (req, res) => {
