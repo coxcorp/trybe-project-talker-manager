@@ -168,6 +168,26 @@ app.put('/talker/:id', async (req, res) => {
   return res.status(200).json(editedTalker);
 });
 
+// Requisito 06
+app.delete('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+
+  // Validação de token
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  const data = await fs.readFile(FILENAME, 'utf-8');
+  const talkers = JSON.parse(data);
+  const undeletedTalkers = talkers.filter((talker) => talker.id !== Number(id));
+  await fs.writeFile(FILENAME, JSON.stringify(undeletedTalkers));
+  return res.status(204).end();
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
