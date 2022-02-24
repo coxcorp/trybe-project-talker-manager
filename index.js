@@ -11,6 +11,7 @@ const emailValidation = require('./middlewares/emailValidation');
 const passwordValidation = require('./middlewares/passwordValidation');
 const getAllTalkers = require('./controllers/getAllTalkers');
 const getTalkerById = require('./controllers/getTalkerById');
+const login = require('./controllers/login');
 
 const app = express();
 app.use(express.json());
@@ -31,7 +32,7 @@ app.get('/talker', getAllTalkers);
 app.post('/login',
   emailValidation,
   passwordValidation,
-  (req, res) => res.status(HTTP_OK_STATUS).json({ token: crypto.randomBytes(8).toString('hex') }));
+  login);
 
 // Requisito 04
 app.post('/talker',
@@ -64,17 +65,7 @@ app.get('/talker/search', authValidation, async (req, res) => {
 });
 
 // Requisito 02
-app.get('/talker/:id', getTalkerById,
-// async (req, res) => {
-//   const { id } = req.params;
-//   const data = await fs.readFile(FILENAME, 'utf-8');
-//   const talker = JSON.parse(data).find((talk) => talk.id === Number(id));
-
-//   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-
-//   return res.status(HTTP_OK_STATUS).json(talker);
-// }
-);
+app.get('/talker/:id', getTalkerById);
 
 // Requisito 05
 app.put('/talker/:id',
