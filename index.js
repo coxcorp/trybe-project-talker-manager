@@ -6,6 +6,7 @@ const ageValidation = require('./middlewares/ageValidation');
 const talkKeyValidation = require('./middlewares/talkKeyValidation');
 const rateValidation = require('./middlewares/rateValidation');
 const dateValidation = require('./middlewares/dateValidation');
+const emailValidation = require('./middlewares/emailValidation');
 
 const app = express();
 app.use(express.json());
@@ -49,15 +50,15 @@ app.get('/talker/:id', async (req, res) => {
 // Requisito 03
 const crypto = require('crypto');
 
-app.post('/login', (req, res) => {
+app.post('/login', emailValidation, (req, res) => {
   const { email, password } = req.body;
-  const emailRegex = /\S+@\S+\.\S+/;
-  if (!email) {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  }
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
+  // const emailRegex = /\S+@\S+\.\S+/;
+  // if (!email) {
+  //   return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  // }
+  // if (!emailRegex.test(email)) {
+  //   return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  // }
   if (!password) {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
@@ -72,13 +73,6 @@ app.post('/login', (req, res) => {
 app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, dateValidation, async (req, res) => {
   const { name, age, talk } = req.body;
 
-  // Validação do formato de data
-  // const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-
-  // if (!dateRegex.test(talk.watchedAt)) {
-  //   return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  // }
-
   const data = await fs.readFile(FILENAME, 'utf-8');
   const talkers = JSON.parse(data);
   const newTalker = { id: (talkers.length + 1), name, age, talk };
@@ -92,13 +86,6 @@ app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValida
 app.put('/talker/:id', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, dateValidation, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-
-  // Validação do formato de data
-  // const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-
-  // if (!dateRegex.test(talk.watchedAt)) {
-  //   return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  // }
 
   const data = await fs.readFile(FILENAME, 'utf-8');
   const talkers = JSON.parse(data);
