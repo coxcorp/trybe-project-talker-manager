@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const authValidation = require('./middlewares/auth');
 const nameValidation = require('./middlewares/nameValidation');
 const ageValidation = require('./middlewares/ageValidation');
+const talkKeyValidation = require('./middlewares/talkKeyValidation');
 
 const app = express();
 app.use(express.json());
@@ -66,15 +67,8 @@ app.post('/login', (req, res) => {
 });
 
 // Requisito 04
-app.post('/talker', authValidation, nameValidation, ageValidation, async (req, res) => {
+app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValidation, async (req, res) => {
   const { name, age, talk } = req.body;
-
-  // Verificação da chave talk
-  if (!talk || talk.rate === undefined || !talk.watchedAt) {
-    return res.status(400).json({ 
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-  }
 
   // Validação de rate entre 1 e 5
   if (talk.rate < 1 || talk.rate > 5) {
@@ -98,16 +92,9 @@ app.post('/talker', authValidation, nameValidation, ageValidation, async (req, r
 });
 
 // Requisito 05
-app.put('/talker/:id', authValidation, nameValidation, ageValidation, async (req, res) => {
+app.put('/talker/:id', authValidation, nameValidation, ageValidation, talkKeyValidation, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-
-  // Verificação da chave talk
-  if (!talk || talk.rate === undefined || !talk.watchedAt) {
-    return res.status(400).json({ 
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-  }
 
   // Validação de rate entre 1 e 5
   if (talk.rate < 1 || talk.rate > 5) {
