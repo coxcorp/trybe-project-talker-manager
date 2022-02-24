@@ -19,6 +19,25 @@ app.get('/talker', async (req, res) => {
   return res.status(HTTP_OK_STATUS).json(JSON.parse(data));
 });
 
+// Requisito 07
+app.get('/talker/search', async (req, res) => {
+  const { q } = req.query;
+
+  // Validação de token
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+
+  const data = await fs.readFile(FILENAME, 'utf-8');
+  const talkers = JSON.parse(data);
+  const findTalkers = talkers.filter((talker) => talker.name.includes(q));
+  return res.status(200).json(findTalkers);
+});
+
 // Requisito 02
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
