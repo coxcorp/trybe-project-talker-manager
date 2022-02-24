@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs').promises;
 const authValidation = require('./middlewares/auth');
 const nameValidation = require('./middlewares/nameValidation');
+const ageValidation = require('./middlewares/ageValidation');
 
 const app = express();
 app.use(express.json());
@@ -65,16 +66,8 @@ app.post('/login', (req, res) => {
 });
 
 // Requisito 04
-app.post('/talker', authValidation, nameValidation, async (req, res) => {
+app.post('/talker', authValidation, nameValidation, ageValidation, async (req, res) => {
   const { name, age, talk } = req.body;
-
-  // Validação de idade
-  if (!age) {
-    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
 
   // Verificação da chave talk
   if (!talk || talk.rate === undefined || !talk.watchedAt) {
@@ -105,17 +98,9 @@ app.post('/talker', authValidation, nameValidation, async (req, res) => {
 });
 
 // Requisito 05
-app.put('/talker/:id', authValidation, nameValidation, async (req, res) => {
+app.put('/talker/:id', authValidation, nameValidation, ageValidation, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-
-  // Validação de idade
-  if (!age) {
-    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
-  }
-  if (age < 18) {
-    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
-  }
 
   // Verificação da chave talk
   if (!talk || talk.rate === undefined || !talk.watchedAt) {
