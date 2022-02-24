@@ -5,6 +5,7 @@ const nameValidation = require('./middlewares/nameValidation');
 const ageValidation = require('./middlewares/ageValidation');
 const talkKeyValidation = require('./middlewares/talkKeyValidation');
 const rateValidation = require('./middlewares/rateValidation');
+const dateValidation = require('./middlewares/dateValidation');
 
 const app = express();
 app.use(express.json());
@@ -68,15 +69,15 @@ app.post('/login', (req, res) => {
 });
 
 // Requisito 04
-app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, async (req, res) => {
+app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, dateValidation, async (req, res) => {
   const { name, age, talk } = req.body;
 
   // Validação do formato de data
-  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+  // const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
-  if (!dateRegex.test(talk.watchedAt)) {
-    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
+  // if (!dateRegex.test(talk.watchedAt)) {
+  //   return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  // }
 
   const data = await fs.readFile(FILENAME, 'utf-8');
   const talkers = JSON.parse(data);
@@ -88,16 +89,16 @@ app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValida
 });
 
 // Requisito 05
-app.put('/talker/:id', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, async (req, res) => {
+app.put('/talker/:id', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, dateValidation, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
 
   // Validação do formato de data
-  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+  // const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
-  if (!dateRegex.test(talk.watchedAt)) {
-    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
+  // if (!dateRegex.test(talk.watchedAt)) {
+  //   return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  // }
 
   const data = await fs.readFile(FILENAME, 'utf-8');
   const talkers = JSON.parse(data);
