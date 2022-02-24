@@ -12,6 +12,7 @@ const getAllTalkers = require('./controllers/getAllTalkers');
 const getTalkerById = require('./controllers/getTalkerById');
 const login = require('./controllers/login');
 const createTalker = require('./controllers/createTalker');
+const editTalker = require('./controllers/editTalker');
 
 const app = express();
 app.use(express.json());
@@ -65,19 +66,7 @@ app.put('/talker/:id',
   talkKeyValidation,
   rateValidation,
   dateValidation,
-  async (req, res) => {
-  const { id } = req.params;
-  const { name, age, talk } = req.body;
-
-  const data = await fs.readFile(FILENAME, 'utf-8');
-  const talkers = JSON.parse(data);
-  const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
-  const editedTalker = { id: Number(id), name, age, talk };
-  talkers[talkerIndex] = editedTalker;
-
-  await fs.writeFile(FILENAME, JSON.stringify(talkers));
-  return res.status(HTTP_OK_STATUS).json(editedTalker);
-});
+  editTalker);
 
 // Requisito 06
 app.delete('/talker/:id', authValidation, async (req, res) => {
