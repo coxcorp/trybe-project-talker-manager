@@ -13,6 +13,7 @@ const getTalkerById = require('./controllers/getTalkerById');
 const login = require('./controllers/login');
 const createTalker = require('./controllers/createTalker');
 const editTalker = require('./controllers/editTalker');
+const deleteTalker = require('./controllers/deleteTalker');
 
 const app = express();
 app.use(express.json());
@@ -69,15 +70,7 @@ app.put('/talker/:id',
   editTalker);
 
 // Requisito 06
-app.delete('/talker/:id', authValidation, async (req, res) => {
-  const { id } = req.params;
-
-  const data = await fs.readFile(FILENAME, 'utf-8');
-  const talkers = JSON.parse(data);
-  const undeletedTalkers = talkers.filter((talker) => talker.id !== Number(id));
-  await fs.writeFile(FILENAME, JSON.stringify(undeletedTalkers));
-  return res.status(204).end();
-});
+app.delete('/talker/:id', authValidation, deleteTalker);
 
 app.listen(PORT, () => {
   console.log('Online');
