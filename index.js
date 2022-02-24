@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs').promises;
+const authValidation = require('./middlewares/auth');
 
 const app = express();
 app.use(express.json());
@@ -20,17 +21,8 @@ app.get('/talker', async (req, res) => {
 });
 
 // Requisito 07
-app.get('/talker/search', async (req, res) => {
+app.get('/talker/search', authValidation, async (req, res) => {
   const { q } = req.query;
-
-  // Validação de token
-  const { authorization } = req.headers;
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
 
   const data = await fs.readFile(FILENAME, 'utf-8');
   const talkers = JSON.parse(data);
@@ -72,17 +64,8 @@ app.post('/login', (req, res) => {
 });
 
 // Requisito 04
-app.post('/talker', async (req, res) => {
+app.post('/talker', authValidation, async (req, res) => {
   const { name, age, talk } = req.body;
-
-  // Validação de token
-  const { authorization } = req.headers;
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
 
   // Validação de nome
   if (!name) {
@@ -129,18 +112,9 @@ app.post('/talker', async (req, res) => {
 });
 
 // Requisito 05
-app.put('/talker/:id', async (req, res) => {
+app.put('/talker/:id', authValidation, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-
-  // Validação de token
-  const { authorization } = req.headers;
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
 
   // Validação de nome
   if (!name) {
@@ -188,17 +162,8 @@ app.put('/talker/:id', async (req, res) => {
 });
 
 // Requisito 06
-app.delete('/talker/:id', async (req, res) => {
+app.delete('/talker/:id', authValidation, async (req, res) => {
   const { id } = req.params;
-
-  // Validação de token
-  const { authorization } = req.headers;
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
 
   const data = await fs.readFile(FILENAME, 'utf-8');
   const talkers = JSON.parse(data);
