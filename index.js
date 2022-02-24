@@ -14,6 +14,7 @@ const login = require('./controllers/login');
 const createTalker = require('./controllers/createTalker');
 const editTalker = require('./controllers/editTalker');
 const deleteTalker = require('./controllers/deleteTalker');
+const searchTalker = require('./controllers/searchTalker');
 
 const app = express();
 app.use(express.json());
@@ -47,14 +48,7 @@ app.post('/talker',
   createTalker);
 
 // Requisito 07
-app.get('/talker/search', authValidation, async (req, res) => {
-  const { q } = req.query;
-
-  const data = await fs.readFile(FILENAME, 'utf-8');
-  const talkers = JSON.parse(data);
-  const findTalkers = talkers.filter((talker) => talker.name.includes(q));
-  return res.status(HTTP_OK_STATUS).json(findTalkers);
-});
+app.get('/talker/search', authValidation, searchTalker);
 
 // Requisito 02
 app.get('/talker/:id', getTalkerById);
