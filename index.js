@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const fs = require('fs').promises;
 const authValidation = require('./middlewares/auth');
 const nameValidation = require('./middlewares/nameValidation');
@@ -49,14 +50,20 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // Requisito 03
-const crypto = require('crypto');
-
-app.post('/login', emailValidation, passwordValidation, (req, res) => {
-  return res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
-});
+app.post('/login',
+  emailValidation,
+  passwordValidation,
+  (req, res) => res.status(200).json({ token: crypto.randomBytes(8).toString('hex') }));
 
 // Requisito 04
-app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, dateValidation, async (req, res) => {
+app.post('/talker',
+  authValidation,
+  nameValidation,
+  ageValidation,
+  talkKeyValidation,
+  rateValidation,
+  dateValidation,
+  async (req, res) => {
   const { name, age, talk } = req.body;
 
   const data = await fs.readFile(FILENAME, 'utf-8');
@@ -69,7 +76,14 @@ app.post('/talker', authValidation, nameValidation, ageValidation, talkKeyValida
 });
 
 // Requisito 05
-app.put('/talker/:id', authValidation, nameValidation, ageValidation, talkKeyValidation, rateValidation, dateValidation, async (req, res) => {
+app.put('/talker/:id',
+  authValidation,
+  nameValidation,
+  ageValidation,
+  talkKeyValidation,
+  rateValidation,
+  dateValidation,
+  async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
 
